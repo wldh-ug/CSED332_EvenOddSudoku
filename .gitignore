@@ -1,3 +1,7 @@
+## Sudokus
+*.log.zip
+
+
 ## Maven
 target/
 pom.xml.tag

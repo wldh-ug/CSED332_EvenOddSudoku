@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%-5p %c{0} %M:%L > %m%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="edu.postech.csed332" level="INFO">
+        <appender-ref ref="Console"/>
+    </logger>
+
+</configuration>
