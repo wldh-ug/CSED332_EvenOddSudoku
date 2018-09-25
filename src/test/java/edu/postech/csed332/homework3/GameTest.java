@@ -15,7 +15,19 @@ public class GameTest {
 	 */
 	@Test
 	public void testFileIO() {
+
 		// TODO implement this
+		// HACK What will be tested
+		// * Non ASCII Files
+		// * Files in various encodings
+		// * Malformed files
+		// * Non-text type files
+		// * Empty file
+
+		String[] test = {"1", "2"};
+
+		Game.main(test);
+
 	}
 
 }

@@ -1,6 +1,11 @@
 package edu.postech.csed332.homework3;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.Set;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 
@@ -12,7 +17,42 @@ import java.util.Set;
  * 
  */
 public class Sudoku {
-	// TODO implement this
+	private static Logger log = LoggerFactory.getLogger(Sudoku.class);
+	
+	/**
+	 * Creates a new sudoku game from given file.
+	 *
+	 * @param fileName the name of the input file
+	 */
+	public Sudoku(String fileName) {
+
+		// Check file readability
+		File inputFile = new File(fileName);
+		if (inputFile.isFile() && inputFile.canRead()) {
+
+			try {
+
+				FileInputStream input = new FileInputStream(inputFile);
+
+				try {
+
+					
+
+				} catch (Exception e) {
+
+				} finally {
+
+					input.close();
+
+				}
+
+			} catch (IOException e) {
+
+			}
+
+		}
+
+	}
 
 	/**
 	 * Returns a set of Solution instance for the given sudoku puzzle.

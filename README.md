@@ -3,4 +3,4 @@
 > **Student ID:** 20160087, **Povis ID:** iknowme
 
 ## Development Notes
-+ DO NOT USE Lombok → It does not supports Java 10.
++ **DO NOT USE** Lombok → It does not supports Java 10.

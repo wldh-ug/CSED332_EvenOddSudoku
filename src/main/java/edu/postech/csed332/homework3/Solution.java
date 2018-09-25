@@ -1,5 +1,8 @@
 package edu.postech.csed332.homework3;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * 
  * An instance of this class represents a single solution for a sudoku puzzle
@@ -8,7 +11,7 @@ package edu.postech.csed332.homework3;
  * 
  */
 public class Solution {
-	// TODO implement this
+	private static Logger log = LoggerFactory.getLogger(Solution.class);
 
 	/**
 	 * Returns a value of a cell in the solution. If the input is out of range, return null.
@@ -23,4 +26,15 @@ public class Solution {
 	public Integer getValue(int row, int column) {
 		// TODO implement this
 	}
+
+	/**
+	 * Export self to plain text file with given file name.
+	 * 
+	 * @param fileName file name to be exported
+	 * @return Whether file is successfully saved or not
+	 */
+	public Boolean export(String fileName) {
+		// TODO implement this
+	}
+
 }

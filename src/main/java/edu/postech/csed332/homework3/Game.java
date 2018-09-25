@@ -1,6 +1,7 @@
 package edu.postech.csed332.homework3;
 
 import java.util.Arrays;
+import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,20 +20,29 @@ public class Game {
 	 * @param args name of the input file for a sudoku puzzle
 	 */
 	public static void main(String[] args) {
+
+		// NOTE: all other logs should not made in Game class.
 		
 		log.info("SUDOKUS started with {} problem(s)", args.length);
 
 		// Iterate args, load game, and solve the game
 		for (String prob : args) {
 
-			log.info("New game: from {}", prob);
-
 			try {
 
 				Sudoku game = new Sudoku(prob);
+				Set<Solution> sols = game.solve();
+
+				int i = 1;
+				for (Solution sol : sols) {
+
+					sol.export(prob + "_" + (i++) + ".solution");
+
+				}
 
 			} catch (Exception e) {
 
+				log.error("Error caught, stopping execution of {}.", prob);
 				log.error(e.toString());
 
 			}
