@@ -1,5 +1,7 @@
 package edu.postech.csed332.homework3;
 
+import org.junit.Test;
+
 /**
  * Test the behavior of the class Solution, including getValue().
  */
