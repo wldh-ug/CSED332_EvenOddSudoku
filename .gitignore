@@ -1,5 +1,7 @@
 ## Sudokus
+log/
 *.log.zip
+*.solution
 
 
 ## Maven
