@@ -1,11 +1,17 @@
 package edu.postech.csed332.homework3;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
+import java.util.Vector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import edu.postech.csed332.homework3.Game.WrongGameException;
 
 /**
  * 
@@ -18,13 +24,16 @@ import org.slf4j.LoggerFactory;
  */
 public class Sudoku {
 	private static Logger log = LoggerFactory.getLogger(Sudoku.class);
-	
+	private char[][] sudoku = null;
+	private Set<Solution> solutions = null;
+
 	/**
 	 * Creates a new sudoku game from given file.
 	 *
 	 * @param fileName the name of the input file
+	 * @throws IOException, WrongGameException
 	 */
-	public Sudoku(String fileName) {
+	public Sudoku(String fileName) throws IOException, WrongGameException {
 
 		// Check file readability
 		File inputFile = new File(fileName);
@@ -36,9 +45,45 @@ public class Sudoku {
 
 				try {
 
-					
+					log.info("Reading a game from {}.", fileName);
 
-				} catch (Exception e) {
+					// File read by line
+					BufferedReader read = new BufferedReader(new InputStreamReader(input));
+					String line;
+					int i = 0;
+
+					// Initialize
+					this.sudoku = new char[9][];
+
+					try {
+
+						// Read by line
+						while ((line = read.readLine()) != null) {
+
+							log.debug("A line entered: {} [{}]", line, line.length());
+
+							if (line.length() != 9)
+								log.warn("Line length is not ⑨, YOU STUPID!");
+
+							sudoku[i++] = line.toCharArray();
+
+						}
+
+						log.info("Successfully read.");
+
+					} catch (IOException e) {
+
+						throw e;
+
+					} finally {
+
+						read.close();
+
+					}
+
+				} catch (IOException e) {
+
+					throw e;
 
 				} finally {
 
@@ -48,7 +93,15 @@ public class Sudoku {
 
 			} catch (IOException e) {
 
+				log.error("Check the file and its format.");
+				throw e;
+
 			}
+
+		} else {
+
+			log.error("File is not readable.");
+			throw new WrongGameException();
 
 		}
 
@@ -60,7 +113,17 @@ public class Sudoku {
 	 * @return the set of solutions
 	 */
 	public Set<Solution> solve() {
-		// TODO implement this
+
+		if (this.solutions == null) {
+
+			solutions = new HashSet<Solution>();
+
+			// TODO: DO MAKE SOLUTIONS
+
+		}
+
+		return this.solutions;
+
 	}
 
 	/**
@@ -72,7 +135,19 @@ public class Sudoku {
 	 *         false.
 	 */
 	public Boolean isEven(int row, int column) {
-		// TODO implement this
+
+		int cellValue = Character.getNumericValue(sudoku[row][column]);
+
+		if ((cellValue > 0 && cellValue % 2 == 0) || (sudoku[row][column] == '*')) {
+
+			return true;
+
+		} else {
+
+			return false;
+
+		}
+
 	}
 
 	/**
@@ -84,7 +159,20 @@ public class Sudoku {
 	 * @return A value of a cell, if it is non-empty
 	 */
 	public Integer getValue(int row, int column) {
-		// TODO implement this
+
+		return Character.getNumericValue(sudoku[row][column]);
+
+	}
+
+	/**
+	 * Returns raw game board.
+	 * 
+	 * @return "sudoku" local variable
+	 */
+	public char[][] getRawBoard() {
+
+		return sudoku;
+
 	}
 
 }
