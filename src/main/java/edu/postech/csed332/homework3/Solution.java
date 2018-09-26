@@ -1,5 +1,7 @@
 package edu.postech.csed332.homework3;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,7 +38,7 @@ public class Solution {
 	 * @return Value of a (row, column) cell, provided by a given solution
 	 */
 	public Integer getValue(int row, int column) {
-	
+
 		return this.solution[row][column];
 
 	}
@@ -48,7 +50,49 @@ public class Solution {
 	 * @return Whether file is successfully saved or not
 	 */
 	public Boolean export(String fileName) {
-		// TODO implement this
+
+		try {
+
+			FileOutputStream write = new FileOutputStream(fileName);
+			String output = new String();
+
+			for (int i = 0; i < 9; i++) {
+
+				for (int j = 0; j < 9; j++) {
+
+					output += this.solution[i][j];
+
+				}
+
+				output += '\n';
+
+			}
+
+			try {
+
+				write.write(output.getBytes());
+
+			} catch (IOException e) {
+
+				throw e;
+
+			} finally {
+
+				write.close();
+
+			}
+
+			return true;
+
+		} catch (IOException e) {
+
+			log.error("File exportion failed!");
+			log.error(e.toString());
+
+			return false;
+
+		}
+
 	}
 
 }

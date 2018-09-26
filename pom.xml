@@ -60,5 +60,11 @@
 			<artifactId>slf4j-api</artifactId>
 			<version>1.8.0-beta2</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.ow2.sat4j/org.ow2.sat4j.core -->
+		<dependency>
+			<groupId>org.ow2.sat4j</groupId>
+			<artifactId>org.ow2.sat4j.core</artifactId>
+			<version>2.3.5</version>
+		</dependency>
 	</dependencies>
 </project>
