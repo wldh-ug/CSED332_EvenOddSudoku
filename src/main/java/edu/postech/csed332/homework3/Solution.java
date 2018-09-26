@@ -12,6 +12,18 @@ import org.slf4j.LoggerFactory;
  */
 public class Solution {
 	private static Logger log = LoggerFactory.getLogger(Solution.class);
+	private int[][] solution;
+
+	/**
+	 * Saves solution in int array format
+	 * 
+	 * @param solved solved solution
+	 */
+	public Solution(int[][] solved) {
+
+		this.solution = solved;
+
+	}
 
 	/**
 	 * Returns a value of a cell in the solution. If the input is out of range, return null.
@@ -24,7 +36,9 @@ public class Solution {
 	 * @return Value of a (row, column) cell, provided by a given solution
 	 */
 	public Integer getValue(int row, int column) {
-		// TODO implement this
+	
+		return this.solution[row][column];
+
 	}
 
 	/**

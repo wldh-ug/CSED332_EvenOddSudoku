@@ -21,8 +21,8 @@ public class Game {
 	 */
 	public static void main(String[] args) {
 
-		// NOTE: all other logs should not made in Game class.
-		
+		// NOTE: all other logs should not made in this(Game) class.
+
 		log.info("SUDOKUS started with {} problem(s)", args.length);
 
 		// Iterate args, load game, and solve the game
@@ -56,6 +56,12 @@ public class Game {
 	public static class WrongGameException extends Exception {
 
 		private static final long serialVersionUID = -3590540730484860628L;
+
+	}
+
+	public static class NoAnswerException extends Exception {
+
+		private static final long serialVersionUID = 1653109156198654654L;
 
 	}
 
