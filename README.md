@@ -2,28 +2,34 @@
 > **[Jio Gim](mailto:jio.gim@postech.edu)**, Creative IT Engineering, POSTECH  
 > **Student ID:** 20160087, **Povis ID:** iknowme
 
+🤔 **Tip:** If you are watching this document in **Github**, look [this prerendered README](README.html).  
+
+|                         Sudoku Board                         |
+|:------------------------------------------------------------:|
+|<img src="images/sudoku.png" alt="Sudoku Board" width="360" />|
+
 ## How I used CNF to solve E/O Sudoku game
-
-<div style="float:right; text-align:center;">
-<img src="images/sudoku.png" style="width: 360px;" alt="Sudoku Board" />
-<p style="color: #aaa; text-align:center;">Sudoku Board</p>
-</div>
-
 #### Value Mapping
-In my solver (named "SUDOKUS"), ![x_{(i,j,k)}](images/x_ijk.png) which means whether if ![i](images/i.png)th row ![j](images/j.png)th column has value ![k](images/k.png) is mapped to ![ijk](images/ijk.png). For example, when ![777](images/777.png) is true, the cell of ![7](images/7.png)th row ![7](images/7.png)th column should have a value of ![7](images/7.png).
+In my solver (named *SUDOKUS*), $x_{(i,j,k)}$ which means whether if $i$ th row $j$ th column has value $k$ is mapped to $ijk$. For example, when $777$ is true, the cell of $7$ th row $7$ th column should have a value of $7$.
 
 #### CNF Making
 Below items are conjuncted.  
   + **All possibilities for an empty cell**  
-    For all empty cells, add condition of its all possibilities. For instance, in the cell of ![7](images/7.png)th row ![7](images/7.png)th column on right figure, the number ![1](images/1.png), ![3](images/3.png), ![5](images/5.png), ![7](images/7.png), ![9](images/9.png) cannot be in there. So in this case, the condition ![(x_{(7,7,2)}\lor x_{(7,7,4)}\lor x_{(7,7,6)} \lor x_{(7,7,8)})\land \lnot x_{(7,7,1)} \\\land \lnot x_{(7,7,3)} \land \lnot x_{(7,7,5)} \land \lnot x_{(7,7,7)} \land \lnot x_{(7,7,9)}](images/all_possibilities_example.png) will be included to the CNF sentence. In this phase, Even/Odd Sudoku rules are also applied.  
+    For all empty cells, add condition of its all possibilities.
+    For instance, in the cell of $7$ th row $7$ th column on right figure, the number $1$, $3$, $5$, $7$, $9$ cannot be in there. So in this case, the condition $(x_{(7,7,2)}\lor x_{(7,7,4)}\lor x_{(7,7,6)} \lor x_{(7,7,8)})\land \lnot x_{(7,7,1)} \land \lnot x_{(7,7,3)} \land \lnot x_{(7,7,5)} \land \lnot x_{(7,7,7)} \land \lnot x_{(7,7,9)}$ will be included to the CNF sentence. In this phase, Even/Odd Sudoku rules are also applied.  
+    
   + **Basic Sudoku rules**  
-    There're three major rule: ![1](images/1.png) to ![9](images/9.png) in each sub-grid, in each column, and in each row. This can be expressed in CNF as below.
-      - Sub-grid level  
-        ![Long Condition](images/basic_rules_subgrid_example.png)
-      - Row level
-        ![Long Condition](images/basic_rules_row_example.png)
-      - Column level
-        ![Long Condition](images/basic_rules_subgrid_example.png)
+    There're three major rule: $1$ to $9$ in each sub-grid, in each column, and in each row. This can be expressed in CNF as below.
+      - **Sub-grid level**  
+        $(x_{(1,1,1)} \lor x_{(1,2,1)} \lor x_{(1,3,1)} \lor x_{(2,1,1)} \lor x_{(2,2,1)} \lor x_{(2,3,1)} \lor x_{(3,1,1)} \lor x_{(3,2,1)} \lor x_{(3,3,1)}) \\ \land (x_{(1,1,2)} \lor x_{(1,2,2)} \lor x_{(1,3,2)} \lor x_{(2,1,2)} \lor x_{(2,2,2)} \lor x_{(2,3,2)} \lor x_{(3,1,2)} \lor x_{(3,2,2)} \lor x_{(3,3,2)}) \\ \cdots \\ \land (x_{(1,1,9)} \lor x_{(1,2,9)} \lor x_{(1,3,9)} \lor x_{(2,1,9)} \lor x_{(2,2,9)} \lor x_{(2,3,9)} \lor x_{(3,1,9)} \lor x_{(3,2,9)} \lor x_{(3,3,9)})$  
+      - **Row level**  
+        $(x_{(1,1,1)} \lor x_{(1,2,1)} \lor x_{(1,3,1)} \lor x_{(1,4,1)} \lor x_{(1,5,1)} \lor x_{(1,6,1)} \lor x_{(1,7,1)} \lor x_{(1,8,1)} \lor x_{(1,9,1)}) \\ \land (x_{(1,1,2)} \lor x_{(1,2,2)} \lor x_{(1,3,2)} \lor x_{(1,4,2)} \lor x_{(1,5,2)} \lor x_{(1,6,2)} \lor x_{(1,7,2)} \lor x_{(1,8,2)} \lor x_{(1,9,2)}) \\ \cdots \\ \land (x_{(1,1,9)} \lor x_{(1,2,9)} \lor x_{(1,3,9)} \lor x_{(1,4,9)} \lor x_{(1,5,9)} \lor x_{(1,6,9)} \lor x_{(1,7,9)} \lor x_{(1,8,9)} \lor x_{(1,9,9)})$  
+      - **Column level**  
+        $(x_{(1,1,1)} \lor x_{(2,1,1)} \lor x_{(3,1,1)} \lor x_{(4,1,1)} \lor x_{(5,1,1)} \lor x_{(6,1,1)} \lor x_{(7,1,1)} \lor x_{(8,1,1)} \lor x_{(9,1,1)}) \\ \land (x_{(1,1,2)} \lor x_{(2,1,2)} \lor x_{(3,1,2)} \lor x_{(4,1,2)} \lor x_{(5,1,2)} \lor x_{(6,1,2)} \lor x_{(7,1,2)} \lor x_{(8,1,2)} \lor x_{(9,1,2)}) \\ \cdots \\ \land (x_{(1,1,9)} \lor x_{(2,1,9)} \lor x_{(3,1,9)} \lor x_{(4,1,9)} \lor x_{(5,1,9)} \lor x_{(6,1,9)} \lor x_{(7,1,9)} \lor x_{(8,1,9)} \lor x_{(9,1,9)})$  
+
+## Possible Improvements
++ CNF making on *Basic Sudoku Rules* part can be more optimized based on the existing numbers, but I don't want to think deeper than this, so I didn't optimized it.  
+
 
 ## Development Notes
 + **DO NOT USE** Lombok → It does not supports Java 10.

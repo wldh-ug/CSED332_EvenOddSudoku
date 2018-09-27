@@ -116,7 +116,7 @@ public class Sudoku {
 
 			solutions = new HashSet<Solution>();
 
-			// TODO: DO MAKE SOLUTIONS
+			
 
 		}
 
