@@ -2,7 +2,7 @@
 > **[Jio Gim](mailto:jio.gim@postech.edu)**, Creative IT Engineering, POSTECH  
 > **Student ID:** 20160087, **Povis ID:** iknowme
 
-🤔 **Tip:** This page uses LaTeX feature of **Gitlab**. If you are watching this document in **Github**, look [this prerendered README](README.html).  
+🤔 **Tip:** This page uses KaTeX feature of **Gitlab**. If you are watching this document in **Github**, look [this prerendered README](README.html).  
 
 |                         Sudoku Board                         |
 |:------------------------------------------------------------:|
@@ -21,11 +21,20 @@ Below items are conjuncted.
   + **Basic Sudoku rules**  
     There're three major rule: $`1`$ to $`9`$ in each sub-grid, in each column, and in each row. This can be expressed in CNF as below.
       - **Sub-grid level**  
-        $`(x_{(1,1,1)} \lor x_{(1,2,1)} \lor x_{(1,3,1)} \lor x_{(2,1,1)} \lor x_{(2,2,1)} \lor x_{(2,3,1)} \lor x_{(3,1,1)} \lor x_{(3,2,1)} \lor x_{(3,3,1)}) \\ \land (x_{(1,1,2)} \lor x_{(1,2,2)} \lor x_{(1,3,2)} \lor x_{(2,1,2)} \lor x_{(2,2,2)} \lor x_{(2,3,2)} \lor x_{(3,1,2)} \lor x_{(3,2,2)} \lor x_{(3,3,2)}) \\ \cdots \\ \land (x_{(1,1,9)} \lor x_{(1,2,9)} \lor x_{(1,3,9)} \lor x_{(2,1,9)} \lor x_{(2,2,9)} \lor x_{(2,3,9)} \lor x_{(3,1,9)} \lor x_{(3,2,9)} \lor x_{(3,3,9)})`$  
+        $`(x_{(1,1,1)} \lor x_{(1,2,1)} \lor x_{(1,3,1)} \lor x_{(2,1,1)} \lor x_{(2,2,1)} \lor x_{(2,3,1)} \lor x_{(3,1,1)} \lor x_{(3,2,1)} \lor x_{(3,3,1)})`$
+        $`\land (x_{(1,1,2)} \lor x_{(1,2,2)} \lor x_{(1,3,2)} \lor x_{(2,1,2)} \lor x_{(2,2,2)} \lor x_{(2,3,2)} \lor x_{(3,1,2)} \lor x_{(3,2,2)} \lor x_{(3,3,2)})`$
+        $`\cdots`$
+        $`\land (x_{(1,1,9)} \lor x_{(1,2,9)} \lor x_{(1,3,9)} \lor x_{(2,1,9)} \lor x_{(2,2,9)} \lor x_{(2,3,9)} \lor x_{(3,1,9)} \lor x_{(3,2,9)} \lor x_{(3,3,9)})`$  
       - **Row level**  
-        $`(x_{(1,1,1)} \lor x_{(1,2,1)} \lor x_{(1,3,1)} \lor x_{(1,4,1)} \lor x_{(1,5,1)} \lor x_{(1,6,1)} \lor x_{(1,7,1)} \lor x_{(1,8,1)} \lor x_{(1,9,1)}) \\ \land (x_{(1,1,2)} \lor x_{(1,2,2)} \lor x_{(1,3,2)} \lor x_{(1,4,2)} \lor x_{(1,5,2)} \lor x_{(1,6,2)} \lor x_{(1,7,2)} \lor x_{(1,8,2)} \lor x_{(1,9,2)}) \\ \cdots \\ \land (x_{(1,1,9)} \lor x_{(1,2,9)} \lor x_{(1,3,9)} \lor x_{(1,4,9)} \lor x_{(1,5,9)} \lor x_{(1,6,9)} \lor x_{(1,7,9)} \lor x_{(1,8,9)} \lor x_{(1,9,9)})`$  
+        $`(x_{(1,1,1)} \lor x_{(1,2,1)} \lor x_{(1,3,1)} \lor x_{(1,4,1)} \lor x_{(1,5,1)} \lor x_{(1,6,1)} \lor x_{(1,7,1)} \lor x_{(1,8,1)} \lor x_{(1,9,1)})`$
+        $`\land (x_{(1,1,2)} \lor x_{(1,2,2)} \lor x_{(1,3,2)} \lor x_{(1,4,2)} \lor x_{(1,5,2)} \lor x_{(1,6,2)} \lor x_{(1,7,2)} \lor x_{(1,8,2)} \lor x_{(1,9,2)})`$
+        $`\cdots`$
+        $`\land (x_{(1,1,9)} \lor x_{(1,2,9)} \lor x_{(1,3,9)} \lor x_{(1,4,9)} \lor x_{(1,5,9)} \lor x_{(1,6,9)} \lor x_{(1,7,9)} \lor x_{(1,8,9)} \lor x_{(1,9,9)})`$  
       - **Column level**  
-        $`(x_{(1,1,1)} \lor x_{(2,1,1)} \lor x_{(3,1,1)} \lor x_{(4,1,1)} \lor x_{(5,1,1)} \lor x_{(6,1,1)} \lor x_{(7,1,1)} \lor x_{(8,1,1)} \lor x_{(9,1,1)}) \\ \land (x_{(1,1,2)} \lor x_{(2,1,2)} \lor x_{(3,1,2)} \lor x_{(4,1,2)} \lor x_{(5,1,2)} \lor x_{(6,1,2)} \lor x_{(7,1,2)} \lor x_{(8,1,2)} \lor x_{(9,1,2)}) \\ \cdots \\ \land (x_{(1,1,9)} \lor x_{(2,1,9)} \lor x_{(3,1,9)} \lor x_{(4,1,9)} \lor x_{(5,1,9)} \lor x_{(6,1,9)} \lor x_{(7,1,9)} \lor x_{(8,1,9)} \lor x_{(9,1,9)})`$  
+        $`(x_{(1,1,1)} \lor x_{(2,1,1)} \lor x_{(3,1,1)} \lor x_{(4,1,1)} \lor x_{(5,1,1)} \lor x_{(6,1,1)} \lor x_{(7,1,1)} \lor x_{(8,1,1)} \lor x_{(9,1,1)})`$
+        $`\land (x_{(1,1,2)} \lor x_{(2,1,2)} \lor x_{(3,1,2)} \lor x_{(4,1,2)} \lor x_{(5,1,2)} \lor x_{(6,1,2)} \lor x_{(7,1,2)} \lor x_{(8,1,2)} \lor x_{(9,1,2)})`$
+        $`\cdots`$
+        $`\land (x_{(1,1,9)} \lor x_{(2,1,9)} \lor x_{(3,1,9)} \lor x_{(4,1,9)} \lor x_{(5,1,9)} \lor x_{(6,1,9)} \lor x_{(7,1,9)} \lor x_{(8,1,9)} \lor x_{(9,1,9)})`$  
 
 ## Possible Improvements
 + CNF making on *Basic Sudoku Rules* part can be more optimized based on the existing numbers, but I don't want to think deeper than this, so I didn't optimized it.  
