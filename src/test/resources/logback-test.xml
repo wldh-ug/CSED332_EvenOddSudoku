@@ -11,10 +11,10 @@
 
     <appender name="File" class="ch.qos.logback.core.rolling.RollingFileAppender">
 
-        <file>log/sudokus.test.${time}.log</file>
+        <file>logs/sudokus.test.${time}.log</file>
 
         <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-            <fileNamePattern>log/sudokus.test.${time}.%i.log.zip</fileNamePattern>
+            <fileNamePattern>logs/sudokus.test.${time}.%i.log.zip</fileNamePattern>
             <minIndex>1</minIndex>
             <maxIndex>20</maxIndex>
         </rollingPolicy>

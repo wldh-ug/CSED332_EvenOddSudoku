@@ -20,7 +20,7 @@ public class SudokuTest {
 
 		log.info("Testing Constructors");
 
-		Sudoku spenceGame = new Sudoku("example/spence.sudoku");
+		Sudoku spenceGame = new Sudoku("examples/spence.sudoku");
 
 		char[][] spenceBoard = spenceGame.getRawBoard();
 		char[][] spenceBoardRaw = {
@@ -70,5 +70,5 @@ public class SudokuTest {
 	public void testGetValue() {
 		// TODO implement this
 	}
-	
+
 }

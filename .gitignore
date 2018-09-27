@@ -1,5 +1,5 @@
 ## Sudokus
-log/
+logs/
 *.log.zip
 *.solution
 
