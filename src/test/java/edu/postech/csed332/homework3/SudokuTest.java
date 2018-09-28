@@ -18,7 +18,7 @@ public class SudokuTest {
 	@Test
 	public void testConstructor() throws Exception {
 
-		log.info("Testing Constructors");
+		log.info("Testing constructor...");
 
 		Sudoku spenceGame = new Sudoku("examples/spence.sudoku");
 
@@ -48,8 +48,14 @@ public class SudokuTest {
 	 * is obtained.
 	 */
 	@Test
-	public void testSolve() {
-		// TODO implement this
+	public void testSolve() throws Exception {
+		
+		log.info("Testing solver...");
+
+		Sudoku aulickGame = new Sudoku("examples/aulick.sudoku");
+
+		aulickGame.solve();
+
 	}
 
 	/**
