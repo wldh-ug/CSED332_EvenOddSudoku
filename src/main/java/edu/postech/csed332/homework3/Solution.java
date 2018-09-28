@@ -39,7 +39,15 @@ public class Solution {
 	 */
 	public Integer getValue(int row, int column) {
 
-		return this.solution[row][column];
+		try {
+
+			return this.solution[row][column];
+
+		} catch (IndexOutOfBoundsException e) {
+
+			return null;
+
+		}
 
 	}
 
@@ -71,10 +79,6 @@ public class Solution {
 			try {
 
 				write.write(output.getBytes());
-
-			} catch (IOException e) {
-
-				throw e;
 
 			} finally {
 

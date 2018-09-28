@@ -58,10 +58,4 @@ public class Game {
 
 	}
 
-	public static class NoAnswerException extends Exception {
-
-		private static final long serialVersionUID = 1653109156198654654L;
-
-	}
-
 }
