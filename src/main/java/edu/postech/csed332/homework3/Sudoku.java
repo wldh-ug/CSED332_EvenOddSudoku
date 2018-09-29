@@ -7,10 +7,19 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.sat4j.core.VecInt;
+import org.sat4j.minisat.SolverFactory;
+import org.sat4j.specs.ContradictionException;
+import org.sat4j.specs.ISolver;
+import org.sat4j.specs.TimeoutException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import edu.postech.csed332.homework3.Game.WrongGameException;
@@ -112,6 +121,7 @@ public class Sudoku {
 	 */
 	public Set<Solution> solve() throws WrongGameException {
 
+		// NOTE: Write all codes only in this function!
 		// NOTE: In general cases, there may VERY FEW number of wrong boards are existing.
 		// So, it is good to have more focus on "Solving" rather than "Error detection". This why
 		// "Error Detection" part is devided in two 'for' loops.
@@ -184,6 +194,23 @@ public class Sudoku {
 										cell, i + 1, j + 1, k + 1, l + 1);
 
 								impossibles.get(k).get(l).add(cell);
+
+							}
+
+						}
+
+						// Predetermined cell processing
+						for (int k = 1; k < 10; k++) {
+
+							if (k == cell) {
+
+								disjunctions
+										.add(Arrays.asList(cell + 10 * (j + 1) + 100 * (i + 1)));
+
+							} else {
+
+								disjunctions.add(
+										Arrays.asList(-1 * (k + 10 * (j + 1) + 100 * (i + 1))));
 
 							}
 
@@ -330,8 +357,8 @@ public class Sudoku {
 
 				for (int k = 1; k < 10; k++) {
 
-					List<Integer> disjunctionRow = new ArrayList<Integer>();
-					List<Integer> disjunctionColumn = new ArrayList<Integer>();
+					List<Integer> disjunctionRow = new LinkedList<Integer>();
+					List<Integer> disjunctionColumn = new LinkedList<Integer>();
 
 					for (int j = 0; j < 9; j++) {
 
@@ -349,22 +376,22 @@ public class Sudoku {
 
 			// Sub-grid Level
 			// XXX: i/j = grid position, k = number
+			// NOTE: Bitly hardcoded!
 			for (int k = 1; k < 10; k++) {
 
 				for (int i = 0; i < 3; i++) {
 
 					for (int j = 0; j < 3; j++) {
 
-						disjunctions.add(Arrays
-								.asList(new Integer[] {k + 10 * (1 + 3 * j) + 100 * (1 + 3 * i),
-										k + 10 * (1 + 3 * j) + 100 * (2 + 3 * i),
-										k + 10 * (1 + 3 * j) + 100 * (3 + 3 * i),
-										k + 10 * (2 + 3 * j) + 100 * (1 + 3 * i),
-										k + 10 * (2 + 3 * j) + 100 * (2 + 3 * i),
-										k + 10 * (2 + 3 * j) + 100 * (3 + 3 * i),
-										k + 10 * (3 + 3 * j) + 100 * (1 + 3 * i),
-										k + 10 * (3 + 3 * j) + 100 * (2 + 3 * i),
-										k + 10 * (3 + 3 * j) + 100 * (3 + 3 * i)}));
+						disjunctions.add(Arrays.asList(k + 10 * (1 + 3 * j) + 100 * (1 + 3 * i),
+								k + 10 * (1 + 3 * j) + 100 * (2 + 3 * i),
+								k + 10 * (1 + 3 * j) + 100 * (3 + 3 * i),
+								k + 10 * (2 + 3 * j) + 100 * (1 + 3 * i),
+								k + 10 * (2 + 3 * j) + 100 * (2 + 3 * i),
+								k + 10 * (2 + 3 * j) + 100 * (3 + 3 * i),
+								k + 10 * (3 + 3 * j) + 100 * (1 + 3 * i),
+								k + 10 * (3 + 3 * j) + 100 * (2 + 3 * i),
+								k + 10 * (3 + 3 * j) + 100 * (3 + 3 * i)));
 
 					}
 
@@ -375,10 +402,181 @@ public class Sudoku {
 			/* Convert disjunctions to SAT4J form (N) */
 			log.debug("[3] Convert to Sat4j form...");
 
+			int clauses = 0;
+			ISolver cnf = SolverFactory.newDefault();
+			cnf.newVar(999); // ! This "howmany" is not real "howmany"! → Maximum variable value
+			cnf.setExpectedNumberOfClauses(disjunctions.size());
+
+			for (List<Integer> disjunction : disjunctions) {
+
+				int[] convertedDisjunction =
+						ArrayUtils.toPrimitive(disjunction.toArray(new Integer[0]));
+
+				try {
+
+					cnf.addClause(new VecInt(convertedDisjunction));
+
+					log.debug("Disjunction added: {}", Arrays.toString(convertedDisjunction));
+					clauses += 1;
+
+				} catch (ContradictionException e) {
+
+					log.warn("Contradiction detected: {}", Arrays.toString(convertedDisjunction));
+
+				}
+
+			}
+
+			log.info("{} clauses calculated, {} clauses added.", disjunctions.size(), clauses);
 
 			/* Solve CNF */
 			log.debug("[4] Solving CNF...");
 
+			boolean retry = false;
+			int recentModelCount = 0, recentPosition = 0;
+
+			try {
+
+				do {
+
+					retry = false;
+
+					if (cnf.isSatisfiable()) {
+
+						int[] models = cnf.model();
+						List<Integer> cellRule = new LinkedList<Integer>();
+						Map<Integer, List<Integer>> cellBoard =
+								new HashMap<Integer, List<Integer>>();
+
+						log.debug("Extracting {} models...", models.length);
+
+						for (int answer : models) {
+
+							if (answer > 0) {
+
+								if (recentPosition != answer / 10) {
+
+									if (cellRule.size() > 0) {
+
+										cellBoard.put(recentPosition, cellRule);
+
+										cnf.addClause(new VecInt(ArrayUtils
+												.toPrimitive(cellRule.toArray(new Integer[0]))));
+										cellRule = new LinkedList<Integer>();
+
+									}
+
+									recentPosition = answer / 10;
+
+								}
+
+								cellRule.add(answer);
+
+							}
+
+						}
+
+						StackTraceElement[] stacks = Thread.currentThread().getStackTrace();
+						String callerClass = stacks[2].getClassName();
+
+						if (callerClass.indexOf("Test") > 0) { // * Part for just debugging
+
+							log.debug(
+									"+---------+---------+---------++---------+---------+---------++---------+---------+---------+");
+
+							for (int i = 10; i < 100; i += 10) { // * Row
+
+								String[] lines = {"+", "+", "+"};
+
+								for (int k = 0; k < 3; k++) { // * Cell - Vertical
+
+									for (int j = 1; j < 10; j++) { // * Column
+
+										List<Integer> cell = cellBoard.get(i + j);
+
+										if (cell != null) {
+
+											for (int l = 0; l < 3; l++) { // * Cell - Horizontal
+
+												try {
+
+													lines[k] +=
+															" " + (cell.get(k * 3 + l) % 10) + " ";
+
+												} catch (IndexOutOfBoundsException e) {
+
+													lines[k] += "   ";
+
+												}
+
+											}
+
+										} else {
+
+											lines[k] += "         ";
+
+										}
+
+										if (j == 3 || j == 6) {
+
+											lines[k] += "++";
+
+										} else {
+
+											lines[k] += "|";
+
+										}
+
+									}
+
+								}
+
+								log.debug(lines[0]);
+								log.debug(lines[1]);
+								log.debug(lines[2]);
+
+								if (i == 30 || i == 60) {
+
+									log.debug(
+											"+---------+---------+---------++---------+---------+---------++---------+---------+---------+");
+									log.debug(
+											"+---------+---------+---------++---------+---------+---------++---------+---------+---------+");
+
+								} else {
+
+									log.debug(
+											"+---------+---------+---------++---------+---------+---------++---------+---------+---------+");
+
+								}
+
+							}
+
+						}
+
+						if (recentModelCount != models.length) {
+
+							retry = true;
+
+						}
+
+						recentModelCount = models.length;
+
+					}
+
+				} while (retry);
+
+			} catch (TimeoutException e) {
+
+				log.error("Timed out!");
+
+			} catch (ContradictionException e) {
+
+				log.error("FATAL: Contradiction occurred! CNF application error!");
+				log.error(e.toString());
+
+				return null;
+
+			}
 
 			/* Convert CNF solutions to Solution form */
 			log.debug("[5] Change to Solution form...");
