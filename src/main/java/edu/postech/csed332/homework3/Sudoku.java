@@ -174,6 +174,8 @@ public class Sudoku {
 					if (cell > 0 && cell < 10) {
 
 						// Row & Column
+						log.debug("Propagating impossibles for row and column...");
+
 						for (int k = 0; k < 9; k++) {
 
 							log.debug(
@@ -186,6 +188,8 @@ public class Sudoku {
 						}
 
 						// Sub-grid
+						log.debug("Propagating impossibles for sub-grid...");
+
 						for (int k = (i / 3) * 3; k < (i / 3 + 1) * 3; k++) {
 
 							for (int l = (j / 3) * 3; l < (j / 3 + 1) * 3; l++) {
@@ -449,8 +453,9 @@ public class Sudoku {
 								new HashMap<Integer, List<Integer>>();
 
 						log.debug("Extracting {} models...", models.length);
+						log.debug("Raw models: {}", Arrays.toString(models));
 
-						for (int answer : models) {
+						for (int answer : ArrayUtils.add(models, 1000)) {
 
 							if (answer > 0) {
 
@@ -458,10 +463,14 @@ public class Sudoku {
 
 									if (cellRule.size() > 0) {
 
+										int[] cellRulePrimitive = ArrayUtils
+												.toPrimitive(cellRule.toArray(new Integer[0]));
+
+										log.debug("Cell rule for ({}, {}): {}", recentPosition / 10, recentPosition % 10, Arrays.toString(cellRulePrimitive));
+
 										cellBoard.put(recentPosition, cellRule);
 
-										cnf.addClause(new VecInt(ArrayUtils
-												.toPrimitive(cellRule.toArray(new Integer[0]))));
+										cnf.addClause(new VecInt(cellRulePrimitive));
 										cellRule = new LinkedList<Integer>();
 
 									}
@@ -477,9 +486,10 @@ public class Sudoku {
 						}
 
 						StackTraceElement[] stacks = Thread.currentThread().getStackTrace();
-						String callerClass = stacks[2].getClassName();
 
-						if (callerClass.indexOf("Test") > 0) { // * Part for just debugging
+						// * Part for just debugging
+						if (stacks[2].getClassName().indexOf("Test") > 0
+								&& stacks[2].getMethodName().indexOf("test") == 0) {
 
 							log.debug(
 									"+---------+---------+---------++---------+---------+---------++---------+---------+---------+");
