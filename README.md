@@ -36,8 +36,14 @@ Below items are conjuncted.
         $`\cdots`$  
         $`\land (x_{(1,1,9)} \lor x_{(2,1,9)} \lor x_{(3,1,9)} \lor x_{(4,1,9)} \lor x_{(5,1,9)} \lor x_{(6,1,9)} \lor x_{(7,1,9)} \lor x_{(8,1,9)} \lor x_{(9,1,9)})`$  
 
+      - **For all sets of disjunctions above:** Make negative tuples of nonsame elements of them to make no any duplicated candidates get still alive in solutions.  
+        $`(x_{(1,1,1)} \lor x_{(2,1,1)} \cdots x_{(9,1,1)})`$
+        $`\rightarrow (\lnot x_{(1,1,1)} \lor \lnot x_{(2,1,1)}) \land (\lnot x_{(1,1,1)} \lor \lnot x_{(3,1,1)}) \land \cdots \land (\lnot x_{(8,1,1)} \lor \lnot x_{(9,1,1)})`$  
+
 ## References
-+ **XOR to CNF**: https://math.stackexchange.com/questions/636119/find-dnf-and-cnf-of-an-expression  
++ **XOR to CNF:** https://math.stackexchange.com/questions/636119/find-dnf-and-cnf-of-an-expression  
++ **Compared Solver:**  https://sudokuspoiler.azurewebsites.net/OddEvenSudoku  
+
 
 ## Development Notes
 + **DO NOT USE** Lombok → It does not supports Java 10.
