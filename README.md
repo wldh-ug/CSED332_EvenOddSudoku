@@ -36,9 +36,8 @@ Below items are conjuncted.
         $`\cdots`$  
         $`\land (x_{(1,1,9)} \lor x_{(2,1,9)} \lor x_{(3,1,9)} \lor x_{(4,1,9)} \lor x_{(5,1,9)} \lor x_{(6,1,9)} \lor x_{(7,1,9)} \lor x_{(8,1,9)} \lor x_{(9,1,9)})`$  
 
-## Possible Improvements
-+ CNF making on *Basic Sudoku Rules* part can be more optimized based on the existing numbers, but I don't want to think deeper than this, so I didn't optimized it.  
-
+## References
++ **XOR to CNF**: https://math.stackexchange.com/questions/636119/find-dnf-and-cnf-of-an-expression  
 
 ## Development Notes
 + **DO NOT USE** Lombok → It does not supports Java 10.

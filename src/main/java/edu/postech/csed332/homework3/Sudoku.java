@@ -125,15 +125,15 @@ public class Sudoku {
 		// NOTE: In general cases, there may VERY FEW number of wrong boards are existing.
 		// So, it is good to have more focus on "Solving" rather than "Error detection". This why
 		// "Error Detection" part is devided in two 'for' loops.
+		// NOTE: Convert to "CNF Varible" from "Cell Value" right before add to set!
 
 		log.info("Solving the game...");
 
 		if (this.solutions == null) {
 
 			HashSet<List<Integer>> disjunctions = new HashSet<List<Integer>>();
-			HashSet<Solution> solutions = new HashSet<Solution>();
 
-			/* All possibilities for empty cells (N^2 + 2N) */
+			/* Calculate all possibilities for empty cells (N^2 + 2N) */
 			log.debug("[1] Calculating all possibilities for empty cells...");
 
 			// Initialize impossibles (N)
@@ -158,7 +158,7 @@ public class Sudoku {
 
 				for (int j = 0; j < 9; j++) {
 
-					int cell;
+					int cell; // Original board cell value
 
 					try {
 
@@ -242,7 +242,7 @@ public class Sudoku {
 
 					if (Character.getNumericValue(sudoku[i][j]) < 0) {
 
-						HashSet<Integer> cell = row.get(j);
+						HashSet<Integer> cell = row.get(j); // Impossibles set for specified cell
 						List<Integer> possibles = new ArrayList<Integer>();
 
 						if (sudoku[i][j] == '*') {
@@ -374,6 +374,24 @@ public class Sudoku {
 					disjunctions.add(disjunctionRow);
 					disjunctions.add(disjunctionColumn);
 
+					// HACK: A number should appear most at once in a line (XOR-appended)
+					for (int l = 0; l < 9; l++) {
+
+						for (int m = 1; m < 9; m++) {
+
+							if (l < m) {
+
+								disjunctions.add(Arrays.asList(-1 * disjunctionRow.get(l),
+										-1 * disjunctionRow.get(m)));
+								disjunctions.add(Arrays.asList(-1 * disjunctionColumn.get(l),
+										-1 * disjunctionColumn.get(m)));
+
+							}
+
+						}
+
+					}
+
 				}
 
 			}
@@ -387,15 +405,34 @@ public class Sudoku {
 
 					for (int j = 0; j < 3; j++) {
 
-						disjunctions.add(Arrays.asList(k + 10 * (1 + 3 * j) + 100 * (1 + 3 * i),
-								k + 10 * (1 + 3 * j) + 100 * (2 + 3 * i),
-								k + 10 * (1 + 3 * j) + 100 * (3 + 3 * i),
-								k + 10 * (2 + 3 * j) + 100 * (1 + 3 * i),
-								k + 10 * (2 + 3 * j) + 100 * (2 + 3 * i),
-								k + 10 * (2 + 3 * j) + 100 * (3 + 3 * i),
-								k + 10 * (3 + 3 * j) + 100 * (1 + 3 * i),
-								k + 10 * (3 + 3 * j) + 100 * (2 + 3 * i),
-								k + 10 * (3 + 3 * j) + 100 * (3 + 3 * i)));
+						List<Integer> disjunctionGrid = new LinkedList<Integer>(
+								Arrays.asList(k + 10 * (1 + 3 * j) + 100 * (1 + 3 * i),
+										k + 10 * (1 + 3 * j) + 100 * (2 + 3 * i),
+										k + 10 * (1 + 3 * j) + 100 * (3 + 3 * i),
+										k + 10 * (2 + 3 * j) + 100 * (1 + 3 * i),
+										k + 10 * (2 + 3 * j) + 100 * (2 + 3 * i),
+										k + 10 * (2 + 3 * j) + 100 * (3 + 3 * i),
+										k + 10 * (3 + 3 * j) + 100 * (1 + 3 * i),
+										k + 10 * (3 + 3 * j) + 100 * (2 + 3 * i),
+										k + 10 * (3 + 3 * j) + 100 * (3 + 3 * i)));
+
+						disjunctions.add(disjunctionGrid);
+
+						// HACK: A number should appear most at once in a grid (XOR-appended)
+						for (int l = 0; l < 8; l++) {
+
+							for (int m = 1; m < 9; m++) {
+
+								if (l < m) {
+
+									disjunctions.add(Arrays.asList(-1 * disjunctionGrid.get(l),
+											-1 * disjunctionGrid.get(m)));
+
+								}
+
+							}
+
+						}
 
 					}
 
@@ -438,6 +475,7 @@ public class Sudoku {
 
 			boolean retry = false;
 			int recentModelCount = 0, recentPosition = 0;
+			Map<Integer, List<Integer>> cellBoard = null;
 
 			try {
 
@@ -449,8 +487,7 @@ public class Sudoku {
 
 						int[] models = cnf.model();
 						List<Integer> cellRule = new LinkedList<Integer>();
-						Map<Integer, List<Integer>> cellBoard =
-								new HashMap<Integer, List<Integer>>();
+						cellBoard = new HashMap<Integer, List<Integer>>();
 
 						log.debug("Extracting {} models...", models.length);
 						log.debug("Raw models: {}", Arrays.toString(models));
@@ -466,7 +503,9 @@ public class Sudoku {
 										int[] cellRulePrimitive = ArrayUtils
 												.toPrimitive(cellRule.toArray(new Integer[0]));
 
-										log.debug("Cell rule for ({}, {}): {}", recentPosition / 10, recentPosition % 10, Arrays.toString(cellRulePrimitive));
+										log.debug("Cell rule for ({}, {}): {}", recentPosition / 10,
+												recentPosition % 10,
+												Arrays.toString(cellRulePrimitive));
 
 										cellBoard.put(recentPosition, cellRule);
 
@@ -485,9 +524,9 @@ public class Sudoku {
 
 						}
 
+						// * Part for just debugging
 						StackTraceElement[] stacks = Thread.currentThread().getStackTrace();
 
-						// * Part for just debugging
 						if (stacks[2].getClassName().indexOf("Test") > 0
 								&& stacks[2].getMethodName().indexOf("test") == 0) {
 
@@ -566,10 +605,9 @@ public class Sudoku {
 						if (recentModelCount != models.length) {
 
 							retry = true;
+							recentModelCount = models.length;
 
 						}
-
-						recentModelCount = models.length;
 
 					}
 
@@ -578,6 +616,8 @@ public class Sudoku {
 			} catch (TimeoutException e) {
 
 				log.error("Timed out!");
+
+				return null;
 
 			} catch (ContradictionException e) {
 
@@ -590,7 +630,29 @@ public class Sudoku {
 
 			/* Convert CNF solutions to Solution form */
 			log.debug("[5] Change to Solution form...");
+			HashSet<Solution> solutions = new HashSet<Solution>();
 
+			if (cellBoard != null) {
+
+				// Single Answer
+				int[][] single = new int[9][9];
+
+				for (int i = 0; i < 9; i++) {
+
+					for (int j = 0; j < 9; j++) {
+
+						single[i][j] = cellBoard.get((i + 1) * 10 + j + 1).get(0).intValue() % 10;
+
+					}
+
+				}
+
+				solutions.add(new Solution(single));
+
+			}
+
+			log.debug("[6] Assign calculated answers...");
+			this.solutions = solutions;
 
 		}
 
