@@ -53,10 +53,18 @@ public class Game {
 				}
 
 				// Export solution
-				int i = 1;
-				for (Solution sol : sols) {
+				if (sols.size() == 1) {
 
-					sol.export(pathPrefix + "_" + (i++) + ".solution");
+					sols.iterator().next().export(pathPrefix + ".solution");
+
+				} else {
+
+					int i = 1;
+					for (Solution sol : sols) {
+
+						sol.export(pathPrefix + "_" + (i++) + ".solution");
+
+					}
 
 				}
 
