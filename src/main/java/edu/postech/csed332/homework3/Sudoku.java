@@ -59,7 +59,7 @@ public class Sudoku {
 
 				try {
 
-					log.info("Reading a game from {}.", fileName);
+					log.info("Reading a game from {}...", fileName);
 
 					// File read by line
 					BufferedReader read = new BufferedReader(new InputStreamReader(input));
@@ -80,6 +80,13 @@ public class Sudoku {
 								log.warn("Line length is not ⑨, YOU STUPID!");
 
 							sudoku[i++] = line.toCharArray();
+
+							// To prevent IndexOutOfBoundsException
+							if (i >= 9) {
+
+								break;
+
+							}
 
 						}
 
@@ -173,7 +180,7 @@ public class Sudoku {
 
 					if (cell > 0 && cell < 10) {
 
-						// Row & Column
+						// Rows & Columns
 						log.debug("Propagating impossibles for row and column...");
 
 						for (int k = 0; k < 9; k++) {
@@ -187,7 +194,7 @@ public class Sudoku {
 
 						}
 
-						// Sub-grid
+						// Sub-grids
 						log.debug("Propagating impossibles for sub-grid...");
 
 						for (int k = (i / 3) * 3; k < (i / 3 + 1) * 3; k++) {
@@ -479,6 +486,7 @@ public class Sudoku {
 
 			try {
 
+				// FIXME: If there is no need for repeat, REMOVE THIS DO-WHILE PHRASE.
 				do {
 
 					retry = false;
@@ -490,7 +498,6 @@ public class Sudoku {
 						cellBoard = new HashMap<Integer, List<Integer>>();
 
 						log.debug("Extracting {} models...", models.length);
-						log.debug("Raw models: {}", Arrays.toString(models));
 
 						for (int answer : ArrayUtils.add(models, 1000)) {
 
@@ -531,7 +538,7 @@ public class Sudoku {
 								&& stacks[2].getMethodName().indexOf("test") == 0) {
 
 							log.debug(
-									"+---------+---------+---------++---------+---------+---------++---------+---------+---------+");
+									"+------+------+------++------+------+------++------+------+------+");
 
 							for (int i = 10; i < 100; i += 10) { // * Row
 
@@ -549,12 +556,11 @@ public class Sudoku {
 
 												try {
 
-													lines[k] +=
-															" " + (cell.get(k * 3 + l) % 10) + " ";
+													lines[k] += " " + (cell.get(k * 3 + l) % 10);
 
 												} catch (IndexOutOfBoundsException e) {
 
-													lines[k] += "   ";
+													lines[k] += "  ";
 
 												}
 
@@ -562,7 +568,7 @@ public class Sudoku {
 
 										} else {
 
-											lines[k] += "         ";
+											lines[k] += "      ";
 
 										}
 
@@ -587,14 +593,14 @@ public class Sudoku {
 								if (i == 30 || i == 60) {
 
 									log.debug(
-											"+---------+---------+---------++---------+---------+---------++---------+---------+---------+");
+											"+------+------+------++------+------+------++------+------+------+");
 									log.debug(
-											"+---------+---------+---------++---------+---------+---------++---------+---------+---------+");
+											"+------+------+------++------+------+------++------+------+------+");
 
 								} else {
 
 									log.debug(
-											"+---------+---------+---------++---------+---------+---------++---------+---------+---------+");
+											"+------+------+------++------+------+------++------+------+------+");
 
 								}
 
@@ -632,9 +638,10 @@ public class Sudoku {
 			log.debug("[5] Change to Solution form...");
 			HashSet<Solution> solutions = new HashSet<Solution>();
 
+			// At this moment, cellBoard is the result of the last solution calculation.
 			if (cellBoard != null) {
 
-				// Single Answer
+				// Single Answer - Convert to primitive int array
 				int[][] single = new int[9][9];
 
 				for (int i = 0; i < 9; i++) {
@@ -672,6 +679,8 @@ public class Sudoku {
 	 * @throws WrongGameException
 	 */
 	public Boolean isEven(int row, int column) throws WrongGameException {
+
+		// NOTE: If wrong board, throw exception!
 
 		try {
 
@@ -711,9 +720,26 @@ public class Sudoku {
 	 */
 	public Integer getValue(int row, int column) {
 
+		// NOTE: The great rule in this program is that "If wrong board, throw exception."
+		// But ONLY this function does not follow it. Below are three reasons.
+		// 1) Wrong checking cost is too high.
+		// 2) The constraints from the comment instruction requires to return null.
+		// 3) The basic process of this function does not include "some operations" on specified
+		// value.
+
 		try {
 
-			return Character.getNumericValue(sudoku[row][column]);
+			int value = Character.getNumericValue(sudoku[row][column]);
+
+			if (value > 0 && value < 10) {
+
+				return value;
+
+			} else {
+
+				return null;
+
+			}
 
 		} catch (IndexOutOfBoundsException e) {
 

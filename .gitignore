@@ -2,6 +2,7 @@
 logs/
 *.log.zip
 *.solution
+!*.golden.solution
 
 
 ## Maven

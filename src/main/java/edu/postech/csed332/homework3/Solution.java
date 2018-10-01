@@ -23,7 +23,34 @@ public class Solution {
 	 */
 	public Solution(int[][] solved) {
 
-		this.solution = solved;
+		if (solved != null) {
+
+			log.debug("New solution saved in memory.");
+
+			for (int i = 0; i < solved.length; i++) {
+
+				String solutionLine = "";
+
+				for (int j = 0; j < solved[0].length; j++) {
+
+					solutionLine += " " + solved[i][j] + " ";
+
+				}
+
+				log.debug(solutionLine);
+
+			}
+
+			this.solution = solved;
+
+		} else {
+
+			log.warn("Null solution detected!");
+
+			// Make all other results "null" or "false"
+			this.solution = new int[0][0];
+
+		}
 
 	}
 

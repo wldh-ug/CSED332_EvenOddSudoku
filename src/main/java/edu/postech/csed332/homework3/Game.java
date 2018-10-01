@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
  */
 public class Game {
 	private static Logger log = LoggerFactory.getLogger(Game.class);
+	private static String[] inputExtensions = {"txt", "sudoku"};
 
 	/**
 	 * @param args name of the input file for a sudoku puzzle
@@ -29,13 +30,33 @@ public class Game {
 
 			try {
 
+				// Solve it
 				Sudoku game = new Sudoku(prob);
 				Set<Solution> sols = game.solve();
 
+				// Determine solution saving path
+				String pathPrefix = prob;
+				for (String ext : inputExtensions) {
+
+					log.debug(pathPrefix.substring(prob.length() - ext.length() - 1));
+
+					if (prob.length() > ext.length()
+							&& pathPrefix.substring(prob.length() - ext.length() - 1)
+									.compareTo("." + ext) == 0) {
+
+						pathPrefix = pathPrefix.replace("." + ext, "");
+
+						break;
+
+					}
+
+				}
+
+				// Export solution
 				int i = 1;
 				for (Solution sol : sols) {
 
-					sol.export(prob + "_" + (i++) + ".solution");
+					sol.export(pathPrefix + "_" + (i++) + ".solution");
 
 				}
 
