@@ -58,9 +58,10 @@ public class SudokuTest {
 
 		assertEquals(4, hangulGame.getValue(9, 8).intValue());
 
-		log.info("Test 5: Null filename");
+		log.info("Test 5: Empty filename");
 
 		assertThrows(IOException.class, () -> new Sudoku(null));
+		assertThrows(IOException.class, () -> new Sudoku(""));
 
 		log.info("Test completed!");
 

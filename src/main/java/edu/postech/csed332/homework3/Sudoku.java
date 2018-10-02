@@ -50,6 +50,14 @@ public class Sudoku {
 		// NOTE: DO NOT check each character of board input in this part.
 		// Rather, throw exception when functions using each characters on runtime.
 
+		// Check fileName variable
+		if (fileName == null) {
+
+			log.error("File name is null!");
+			throw new IOException();
+
+		}
+
 		// Check file readability
 		File inputFile = new File(fileName);
 		if (inputFile.isFile() && inputFile.canRead()) {
