@@ -185,9 +185,11 @@ public class Solution {
 	 */
 	public Integer getValue(int row, int column) {
 
+		// NOTE: Row and column number STARTS FROM ONE, NOT ZERO
+
 		try {
 
-			return this.solution[row][column];
+			return this.solution[row - 1][column - 1];
 
 		} catch (IndexOutOfBoundsException e) {
 
@@ -255,9 +257,9 @@ public class Solution {
 
 		List<Difference> diffs = new ArrayList<Solution.Difference>();
 
-		for (int i = 0; i < 9; i++) {
+		for (int i = 1; i < 10; i++) {
 
-			for (int j = 0; j < 9; j++) {
+			for (int j = 1; j < 10; j++) {
 
 				if (this.getValue(i, j) != other.getValue(i, j)) {
 
@@ -296,6 +298,7 @@ public class Solution {
 		public Difference(Solution source, Solution other, int row, int column) {
 
 			// NOTE: Operations below are safe because this uses "getValue" method!
+			// NOTE: As Solution.getValue does, row and column number STARTS FROM ONE, NOT ZERO
 
 			this.row = row;
 			this.column = column;

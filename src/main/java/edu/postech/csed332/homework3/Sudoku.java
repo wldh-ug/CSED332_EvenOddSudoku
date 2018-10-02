@@ -538,7 +538,7 @@ public class Sudoku {
 
 					}
 
-					// * Part for just debugging
+					// * Part for just debugging, prints log in a shape of it
 					StackTraceElement[] stacks = Thread.currentThread().getStackTrace();
 
 					if (stacks[2].getClassName().indexOf("Test") > 0
@@ -680,18 +680,19 @@ public class Sudoku {
 	public Boolean isEven(int row, int column) throws WrongGameException {
 
 		// NOTE: If wrong board, throw exception!
+		// NOTE: Row and column number STARTS FROM ONE, NOT ZERO
 
 		try {
 
-			int cellValue = Character.getNumericValue(sudoku[row][column]);
+			int cellValue = Character.getNumericValue(sudoku[row - 1][column - 1]);
 
 			if ((cellValue < 10 && cellValue > 0 && cellValue % 2 == 0)
-					|| (sudoku[row][column] == '*')) {
+					|| (sudoku[row - 1][column - 1] == '*')) {
 
 				return true;
 
 			} else if ((cellValue < 10 && cellValue > 0 && cellValue % 2 == 1)
-					|| sudoku[row][column] == '.') {
+					|| (sudoku[row - 1][column - 1] == '.')) {
 
 				return false;
 
@@ -725,10 +726,11 @@ public class Sudoku {
 		// 2) The constraints from the comment instruction requires to return null.
 		// 3) The basic process of this function does not include "some operations" on specified
 		// value.
+		// NOTE: Row and column number STARTS FROM ONE, NOT ZERO
 
 		try {
 
-			int value = Character.getNumericValue(sudoku[row][column]);
+			int value = Character.getNumericValue(sudoku[row - 1][column - 1]);
 
 			if (value > 0 && value < 10) {
 
