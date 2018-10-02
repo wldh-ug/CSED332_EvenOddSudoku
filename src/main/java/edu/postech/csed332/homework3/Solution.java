@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.commons.lang3.builder.Diff;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,7 +19,7 @@ import org.slf4j.LoggerFactory;
  * You can freely add member variables and methods to implement this class
  * 
  */
-public class Solution {
+public class Solution implements Comparable {
 	private static Logger log = LoggerFactory.getLogger(Solution.class);
 	private int[][] solution;
 
@@ -316,6 +317,23 @@ public class Solution {
 				this.otherValue = other.getValue(row, column);
 
 			}
+
+		}
+
+	}
+
+	@Override
+	public int compareTo(Object other) {
+
+		if (other instanceof Solution) {
+
+			List<Difference> diffs = this.compareWith((Solution) other);
+
+			return diffs.size();
+
+		} else {
+
+			return -1;
 
 		}
 
