@@ -1,7 +1,13 @@
 package edu.postech.csed332.homework3;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,6 +21,119 @@ import org.slf4j.LoggerFactory;
 public class Solution {
 	private static Logger log = LoggerFactory.getLogger(Solution.class);
 	private int[][] solution;
+
+	/**
+	 * Load a solution from given file.
+	 *
+	 * @param fileName the name of the input file
+	 * @throws IOException
+	 */
+	public Solution(String fileName) throws IOException {
+
+		// NOTE: DO check the integrity of the file in this function
+
+		// Check file readability
+		File inputFile = new File(fileName);
+		if (inputFile.isFile() && inputFile.canRead()) {
+
+			try {
+
+				FileInputStream input = new FileInputStream(inputFile);
+
+				try {
+
+					log.info("Reading a solution from {}...", fileName);
+
+					// File read by line
+					BufferedReader read = new BufferedReader(new InputStreamReader(input));
+					String line;
+					int lineNo = 0;
+
+					// Initialize
+					this.solution = new int[9][];
+
+					try {
+
+						// Read by line
+						while ((line = read.readLine()) != null) {
+
+							// Pass if empty lines & comments
+							if (line.length() == 0 || line.indexOf("//") == 0) {
+
+								continue;
+
+							}
+
+							log.debug("A line entered: {} [{}]", line, line.length());
+
+							if (line.length() < 9) {
+
+								log.error("Line length is less than ⑨, YOU STUPID (Strict Rule)!");
+								throw new IOException();
+
+							} else {
+
+								for (int i = 0; i < 9; i++) {
+
+									int value = Character.getNumericValue(line.charAt(i));
+
+									if (value > 0 && value < 10) {
+
+										this.solution[lineNo][i] = value;
+
+									} else {
+
+										log.error(
+												"Wrong character at {} th line {} th (1-9) character: {}",
+												lineNo, i + 1, line.charAt(i));
+										throw new IOException();
+
+									}
+
+								}
+
+								lineNo++;
+
+							}
+
+							// To prevent IndexOutOfBoundsException
+							if (lineNo >= 9) {
+
+								break;
+
+							}
+
+						}
+
+						log.info("Successfully read.");
+
+					} finally {
+
+						read.close();
+
+					}
+
+				} finally {
+
+					input.close();
+
+				}
+
+			} catch (IOException e) {
+
+				log.error("Check the file and its format.");
+				throw e;
+
+			}
+
+		} else {
+
+			log.error("File is not readable.");
+			throw new IOException();
+
+		}
+
+	}
 
 	/**
 	 * Saves solution in int array format
@@ -121,6 +240,79 @@ public class Solution {
 			log.error(e.toString());
 
 			return false;
+
+		}
+
+	}
+
+	/**
+	 * This compares two solutions and return the array about difference information.
+	 * 
+	 * @param other a solution which this solution will be compared with
+	 * @return an information about comparison. If no difference, this will be an empty array.
+	 */
+	public List<Difference> compareWith(Solution other) {
+
+		List<Difference> diffs = new ArrayList<Solution.Difference>();
+
+		for (int i = 0; i < 9; i++) {
+
+			for (int j = 0; j < 9; j++) {
+
+				if (this.getValue(i, j) != other.getValue(i, j)) {
+
+					diffs.add(new Difference(this, other, i, j));
+
+				}
+
+			}
+
+		}
+
+		return diffs;
+
+	}
+
+	/**
+	 * This class stores the difference data of an specified cell.
+	 */
+	public static class Difference {
+
+		public int row;
+		public int column;
+		public int sourceValue;
+		public int otherValue;
+		public Solution source;
+		public Solution other;
+
+		/**
+		 * Load the value of specified cell automatically and saves them.
+		 * 
+		 * @param source original solution (object that contains callee)
+		 * @param other  compared solution (object from parameter)
+		 * @param row    row of the different value cell
+		 * @param column row of the different value cell
+		 */
+		public Difference(Solution source, Solution other, int row, int column) {
+
+			// NOTE: Operations below are safe because this uses "getValue" method!
+
+			this.row = row;
+			this.column = column;
+			this.source = source;
+			this.other = other;
+
+			if (source != null) {
+
+				this.sourceValue = source.getValue(row, column);
+
+			}
+
+			if (other != null) {
+
+				this.otherValue = other.getValue(row, column);
+
+			}
 
 		}
 
