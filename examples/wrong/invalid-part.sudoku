@@ -1,4 +1,4 @@
-// Wrong Case: Invalid, because there is some zeros.
+// Wrong Case: bad number type (x16(a-f), 0) and bad char (=)
 
 2.*.*.47.
 7**..**..
@@ -8,4 +8,4 @@
 *.*..9*23
 941..*=.8
 *..*.*.a*
-**.65.   
+**.65.
