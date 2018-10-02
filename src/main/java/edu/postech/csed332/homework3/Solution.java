@@ -33,6 +33,14 @@ public class Solution {
 
 		// NOTE: DO check the integrity of the file in this function
 
+		// Check fileName variable
+		if (fileName == null) {
+
+			log.error("File name is null!");
+			throw new IOException();
+
+		}
+
 		// Check file readability
 		File inputFile = new File(fileName);
 		if (inputFile.isFile() && inputFile.canRead()) {
@@ -103,6 +111,13 @@ public class Solution {
 								break;
 
 							}
+
+						}
+
+						if (lineNo < 9) {
+
+							log.error("Lack of row!");
+							throw new IOException();
 
 						}
 
@@ -187,6 +202,7 @@ public class Solution {
 	public Integer getValue(int row, int column) {
 
 		// NOTE: Row and column number STARTS FROM ONE, NOT ZERO
+		// NOTE: There is no need to catch NullException, already checked in constructor.
 
 		try {
 
@@ -207,6 +223,15 @@ public class Solution {
 	 * @return Whether file is successfully saved or not
 	 */
 	public Boolean export(String fileName) {
+
+		// NOTE: There is no need to catch NullException, already checked in constructor.
+
+		if (fileName == null) {
+
+			log.warn("File name is null!");
+			return false;
+
+		}
 
 		try {
 
@@ -256,15 +281,25 @@ public class Solution {
 	 */
 	public List<Difference> compareWith(Solution other) {
 
+		log.info("Comparing two solutions...");
+
 		List<Difference> diffs = new ArrayList<Solution.Difference>();
 
-		for (int i = 1; i < 10; i++) {
+		if (other == null) {
 
-			for (int j = 1; j < 10; j++) {
+			log.warn("Solution from parameter is null!");
 
-				if (this.getValue(i, j) != other.getValue(i, j)) {
+		} else {
 
-					diffs.add(new Difference(this, other, i, j));
+			for (int i = 1; i < 10; i++) {
+
+				for (int j = 1; j < 10; j++) {
+
+					if (this.getValue(i, j) != other.getValue(i, j)) {
+
+						diffs.add(new Difference(this, other, i, j));
+
+					}
 
 				}
 
@@ -283,6 +318,13 @@ public class Solution {
 	 * @return if exists, true, else, false
 	 */
 	public boolean existsIn(Set<Solution> sols) {
+
+		if (sols == null) {
+
+			log.warn("Solution set from paramter is null!");
+			return false;
+
+		}
 
 		boolean exists = false;
 
@@ -308,8 +350,8 @@ public class Solution {
 
 		public int row;
 		public int column;
-		public int sourceValue;
-		public int otherValue;
+		public int sourceValue = -1;
+		public int otherValue = -1;
 		public Solution source;
 		public Solution other;
 
@@ -335,11 +377,19 @@ public class Solution {
 
 				this.sourceValue = source.getValue(row, column);
 
+			} else {
+
+				log.warn("Source solution is null.");
+
 			}
 
 			if (other != null) {
 
 				this.otherValue = other.getValue(row, column);
+
+			} else {
+
+				log.warn("Target solution is null.");
 
 			}
 
@@ -350,8 +400,12 @@ public class Solution {
 	@Override
 	public boolean equals(Object other) {
 
-		log.warn("LAUNCEHD EAQWIFQQQQQQQQQQQQUALS~!");
+		if (other == null) {
 
+			log.warn("Comparison target is null.");
+			return false;
+
+		}
 		if (other instanceof Solution) {
 
 			List<Difference> diffs = this.compareWith((Solution) other);
