@@ -46,9 +46,16 @@ public class GameTest {
 
 		assertTrue(new File("examples/wrong/extension.eosdk.solution").delete());
 
+		log.info("Test 4: Multiple outputs");
+		String[] multiple = {"examples/spence.blind.sudoku"};
+		Game.main(multiple);
+
+		assertTrue(new File("examples/spence.blind_1.solution").delete());
+		assertTrue(new File("examples/spence.blind_2.solution").delete());
+
 		log.info("Test completed!");
 
-		clearTestResult();
+		//clearTestResult();
 
 	}
 

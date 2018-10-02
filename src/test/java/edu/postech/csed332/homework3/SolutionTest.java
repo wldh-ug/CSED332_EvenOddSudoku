@@ -35,10 +35,12 @@ public class SolutionTest {
 
 		log.info("Test 2: Over/undersized file");
 		new Solution("examples/wrong/big.solution"); // There must no exception be occurred
-		assertThrows(IOException.class, () -> new Solution("examples/wrong/small.solution"));
+		assertThrows(IOException.class, () -> new Solution("examples/wrong/small-column.solution"));
+		assertThrows(IOException.class, () -> new Solution("examples/wrong/small-row.solution"));
 
 		log.info("Test 3: Invalid solution file");
-		assertThrows(IOException.class, () -> new Solution("examples/wrong/invalid-number.solution"));
+		assertThrows(IOException.class,
+				() -> new Solution("examples/wrong/invalid-number.solution"));
 		assertThrows(IOException.class, () -> new Solution("examples/wrong/invalid-char.solution"));
 
 		log.info("Test 4: Non-file");
@@ -230,6 +232,8 @@ public class SolutionTest {
 		assertFalse(thatcherSolution.existsIn(terrySolutions));
 		assertTrue(terryGoldenSolution.existsIn(terrySolutions));
 
+		assertFalse(terryGoldenSolution.existsIn(null));
+
 		log.info("Test completed!");
 
 	}
@@ -272,6 +276,8 @@ public class SolutionTest {
 		assertFalse(thatcherSolution.equals(terrySolution));
 		assertFalse(thatcherSolution.equals(null));
 		assertTrue(terrySolution.equals(terryBlindSolution));
+
+		assertFalse(terryBlindSolution.equals(new Object()));
 
 		log.info("Test completed!");
 
