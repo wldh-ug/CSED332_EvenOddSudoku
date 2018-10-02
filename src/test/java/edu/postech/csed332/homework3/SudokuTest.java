@@ -106,6 +106,10 @@ public class SudokuTest {
 		assertTrue(new Solution("examples/terry.blind_5.golden.solution").existsIn(terrySolutions));
 		assertTrue(new Solution("examples/terry.blind_6.golden.solution").existsIn(terrySolutions));
 
+		log.info("Test 5: Solving non-text file");
+		assertThrows(WrongGameException.class,
+				() -> new Sudoku("examples/wrong/content.sudoku").solve());
+
 		log.info("Test completed!");
 
 	}

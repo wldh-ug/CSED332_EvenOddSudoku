@@ -35,11 +35,11 @@ public class SolutionTest {
 
 		log.info("Test 2: Over/undersized file");
 		new Solution("examples/wrong/big.solution"); // There must no exception be occurred
-		assertThrows(IOException.class, () -> new Solution("examples/small.solution"));
+		assertThrows(IOException.class, () -> new Solution("examples/wrong/small.solution"));
 
 		log.info("Test 3: Invalid solution file");
-		assertThrows(IOException.class, () -> new Solution("examples/invalid-number.solution"));
-		assertThrows(IOException.class, () -> new Solution("examples/invalid-char.solution"));
+		assertThrows(IOException.class, () -> new Solution("examples/wrong/invalid-number.solution"));
+		assertThrows(IOException.class, () -> new Solution("examples/wrong/invalid-char.solution"));
 
 		log.info("Test 4: Non-file");
 
@@ -192,6 +192,8 @@ public class SolutionTest {
 		assertFalse(footeSolution.export("examples/"));
 
 		log.info("Test completed!");
+
+		GameTest.clearTestResult();
 
 	}
 
