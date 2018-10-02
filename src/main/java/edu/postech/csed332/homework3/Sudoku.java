@@ -184,6 +184,11 @@ public class Sudoku {
 						log.error("Wrong board! Lack of row or column.");
 						throw new WrongGameException();
 
+					} catch (NullPointerException e) {
+
+						log.error("Wrong board! Lack of row or column.");
+						throw new WrongGameException();
+
 					}
 
 					if (cell > 0 && cell < 10) {
@@ -235,7 +240,7 @@ public class Sudoku {
 
 						}
 
-					} else if (cell > 9) {
+					} else if (cell > 9 || cell == 0) {
 
 						log.error("Wrong predefined number! Out of range ({}).", cell);
 						throw new WrongGameException();
@@ -703,6 +708,11 @@ public class Sudoku {
 			log.error("Wrong board! Lack of row or column.");
 			throw new WrongGameException();
 
+		} catch (NullPointerException e) {
+
+			log.error("Wrong board! Lack of row or column.");
+			throw new WrongGameException();
+
 		}
 
 		log.error("Wrong board! Inappropriate character detected.");
@@ -743,6 +753,10 @@ public class Sudoku {
 			}
 
 		} catch (IndexOutOfBoundsException e) {
+
+			return null;
+
+		} catch (NullPointerException e) {
 
 			return null;
 
