@@ -20,6 +20,7 @@ import org.sat4j.minisat.SolverFactory;
 import org.sat4j.specs.ContradictionException;
 import org.sat4j.specs.ISolver;
 import org.sat4j.specs.TimeoutException;
+import org.sat4j.tools.ModelIterator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import edu.postech.csed332.homework3.Game.WrongGameException;
@@ -73,6 +74,13 @@ public class Sudoku {
 
 						// Read by line
 						while ((line = read.readLine()) != null) {
+
+							// Pass if empty lines & comments
+							if (line.length() == 0 || line.indexOf("//") == 0) {
+
+								continue;
+
+							}
 
 							log.debug("A line entered: {} [{}]", line, line.length());
 
@@ -451,7 +459,7 @@ public class Sudoku {
 			log.debug("[3] Convert to Sat4j form...");
 
 			int clauses = 0;
-			ISolver cnf = SolverFactory.newDefault();
+			ISolver cnf = new ModelIterator(SolverFactory.newDefault());
 			cnf.newVar(999); // ! This "howmany" is not real "howmany"! → Maximum variable value
 			cnf.setExpectedNumberOfClauses(disjunctions.size());
 
@@ -480,155 +488,147 @@ public class Sudoku {
 			/* Solve CNF */
 			log.debug("[4] Solving CNF...");
 
-			boolean retry = false;
-			int recentModelCount = 0, recentPosition = 0;
-			Map<Integer, List<Integer>> cellBoard = null;
+			int recentPosition = 0;
+			List<Map<Integer, List<Integer>>> answerBoards =
+					new ArrayList<Map<Integer, List<Integer>>>();
 
 			try {
 
-				// FIXME: If there is no need for repeat, REMOVE THIS DO-WHILE PHRASE.
-				do {
+				while (cnf.isSatisfiable()) {
 
-					retry = false;
+					int assigned = 0;
+					int[] models = cnf.model();
+					Map<Integer, List<Integer>> cellBoard = new HashMap<Integer, List<Integer>>();
+					List<Integer> cellRule = new LinkedList<Integer>();
 
-					if (cnf.isSatisfiable()) {
+					log.debug("Extracting {} models...", models.length);
+					log.debug("Raw model: {}", Arrays.toString(models));
 
-						int[] models = cnf.model();
-						List<Integer> cellRule = new LinkedList<Integer>();
-						cellBoard = new HashMap<Integer, List<Integer>>();
+					// HACK: '1000' is just a dummy data for iteration!
+					// P. S. This 1000 is the most proper dummy data. DONOT lower this than 1000.
+					for (int answer : ArrayUtils.add(models, 1000)) {
 
-						log.debug("Extracting {} models...", models.length);
+						if (answer > 0) {
 
-						for (int answer : ArrayUtils.add(models, 1000)) {
+							assigned++;
 
-							if (answer > 0) {
+							if (recentPosition != answer / 10) {
 
-								if (recentPosition != answer / 10) {
+								if (cellRule.size() > 0) {
 
-									if (cellRule.size() > 0) {
+									int[] cellRulePrimitive = ArrayUtils
+											.toPrimitive(cellRule.toArray(new Integer[0]));
 
-										int[] cellRulePrimitive = ArrayUtils
-												.toPrimitive(cellRule.toArray(new Integer[0]));
+									log.debug("Cell rule for ({}, {}): {}", recentPosition / 10,
+											recentPosition % 10,
+											Arrays.toString(cellRulePrimitive));
 
-										log.debug("Cell rule for ({}, {}): {}", recentPosition / 10,
-												recentPosition % 10,
-												Arrays.toString(cellRulePrimitive));
-
-										cellBoard.put(recentPosition, cellRule);
-
-										cnf.addClause(new VecInt(cellRulePrimitive));
-										cellRule = new LinkedList<Integer>();
-
-									}
-
-									recentPosition = answer / 10;
+									cellBoard.put(recentPosition, cellRule);
+									cellRule = new LinkedList<Integer>();
 
 								}
 
-								cellRule.add(answer);
+								recentPosition = answer / 10;
 
 							}
 
-						}
-
-						// * Part for just debugging
-						StackTraceElement[] stacks = Thread.currentThread().getStackTrace();
-
-						if (stacks[2].getClassName().indexOf("Test") > 0
-								&& stacks[2].getMethodName().indexOf("test") == 0) {
-
-							log.debug(
-									"+------+------+------++------+------+------++------+------+------+");
-
-							for (int i = 10; i < 100; i += 10) { // * Row
-
-								String[] lines = {"+", "+", "+"};
-
-								for (int k = 0; k < 3; k++) { // * Cell - Vertical
-
-									for (int j = 1; j < 10; j++) { // * Column
-
-										List<Integer> cell = cellBoard.get(i + j);
-
-										if (cell != null) {
-
-											for (int l = 0; l < 3; l++) { // * Cell - Horizontal
-
-												try {
-
-													lines[k] += " " + (cell.get(k * 3 + l) % 10);
-
-												} catch (IndexOutOfBoundsException e) {
-
-													lines[k] += "  ";
-
-												}
-
-											}
-
-										} else {
-
-											lines[k] += "      ";
-
-										}
-
-										if (j == 3 || j == 6) {
-
-											lines[k] += "++";
-
-										} else {
-
-											lines[k] += "|";
-
-										}
-
-									}
-
-								}
-
-								log.debug(lines[0]);
-								log.debug(lines[1]);
-								log.debug(lines[2]);
-
-								if (i == 30 || i == 60) {
-
-									log.debug(
-											"+------+------+------++------+------+------++------+------+------+");
-									log.debug(
-											"+------+------+------++------+------+------++------+------+------+");
-
-								} else {
-
-									log.debug(
-											"+------+------+------++------+------+------++------+------+------+");
-
-								}
-
-							}
-
-						}
-
-						if (recentModelCount != models.length) {
-
-							retry = true;
-							recentModelCount = models.length;
+							cellRule.add(answer);
 
 						}
 
 					}
 
-				} while (retry);
+					// * Part for just debugging
+					StackTraceElement[] stacks = Thread.currentThread().getStackTrace();
+
+					if (stacks[2].getClassName().indexOf("Test") > 0
+							&& stacks[2].getMethodName().indexOf("test") == 0) {
+
+						log.debug(
+								"+------+------+------++------+------+------++------+------+------+");
+
+						for (int i = 10; i < 100; i += 10) { // * Row
+
+							String[] lines = {"+", "+", "+"};
+
+							for (int k = 0; k < 3; k++) { // * Cell - Vertical
+
+								for (int j = 1; j < 10; j++) { // * Column
+
+									List<Integer> cell = cellBoard.get(i + j);
+
+									if (cell != null) {
+
+										for (int l = 0; l < 3; l++) { // * Cell - Horizontal
+
+											try {
+
+												lines[k] += " " + (cell.get(k * 3 + l) % 10);
+
+											} catch (IndexOutOfBoundsException e) {
+
+												lines[k] += "  ";
+
+											}
+
+										}
+
+									} else {
+
+										lines[k] += "      ";
+
+									}
+
+									if (j == 3 || j == 6) {
+
+										lines[k] += "++";
+
+									} else {
+
+										lines[k] += "|";
+
+									}
+
+								}
+
+							}
+
+							log.debug(lines[0]);
+							log.debug(lines[1]);
+							log.debug(lines[2]);
+
+							if (i == 30 || i == 60) {
+
+								log.debug(
+										"+------+------+------++------+------+------++------+------+------+");
+								log.debug(
+										"+------+------+------++------+------+------++------+------+------+");
+
+							} else {
+
+								log.debug(
+										"+------+------+------++------+------+------++------+------+------+");
+
+							}
+
+						}
+
+					}
+
+					// NOTE: In this point, assigned value for normal answer is 82 (due to dummy).
+					log.debug("{} cell rules assigned.", assigned);
+
+					if (assigned == 82) {
+
+						answerBoards.add(cellBoard);
+
+					}
+
+				}
 
 			} catch (TimeoutException e) {
 
 				log.error("Timed out!");
-
-				return null;
-
-			} catch (ContradictionException e) {
-
-				log.error("FATAL: Contradiction occurred! CNF application error!");
-				log.error(e.toString());
 
 				return null;
 
@@ -638,8 +638,7 @@ public class Sudoku {
 			log.debug("[5] Change to Solution form...");
 			HashSet<Solution> solutions = new HashSet<Solution>();
 
-			// At this moment, cellBoard is the result of the last solution calculation.
-			if (cellBoard != null) {
+			for (Map<Integer, List<Integer>> cellBoard : answerBoards) {
 
 				// Single Answer - Convert to primitive int array
 				int[][] single = new int[9][9];
