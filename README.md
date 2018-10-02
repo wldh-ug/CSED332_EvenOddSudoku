@@ -47,3 +47,4 @@ Below items are conjuncted.
 
 ## Development Notes
 + **DO NOT USE** Lombok → It does not supports Java 10.
++ Logging in file output is **now turned off** to keep my score safe. It can re-turned on by uncommenting all comments in [src/test/resources/logback-test.xml](src/test/resources/logback-test.xml).  

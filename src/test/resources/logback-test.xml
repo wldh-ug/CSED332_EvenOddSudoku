@@ -9,7 +9,7 @@
         </encoder>
     </appender>
 
-    <appender name="File" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <!--appender name="File" class="ch.qos.logback.core.rolling.RollingFileAppender">
 
         <file>logs/sudokus.test.${time}.log</file>
 
@@ -27,11 +27,11 @@
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5p %c{0} %M:%L > %m%n</pattern>
         </encoder>
 
-    </appender>
+    </appender-->
 
     <logger name="edu.postech.csed332" level="DEBUG">
         <appender-ref ref="Console"/>
-        <appender-ref ref="File"/>
+        <!-- appender-ref ref="File"/-->
     </logger>
 
 </configuration>
