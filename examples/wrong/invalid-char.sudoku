@@ -1,11 +1,11 @@
-// Wrong Case: When if invalid characters in the input file
+// Wrong Case: Invalid, because there is some zeros.
 
 2.*.*.47.
-7*뛟..**..
+7**..**..
 .9.24..*6
-..*18.9뛟*
-3*.**/5..
-*.=..9*23
-941..**.8
-*..뛟.*.3*
-*🤣.65..4.
+..*10.9**
+3*.***0..
+*.*..9*23
+941..*=.8
+*..*.*.a*
+**.65.   
