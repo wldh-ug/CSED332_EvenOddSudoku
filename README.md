@@ -2,7 +2,7 @@
 > **[Jio Gim](mailto:jio.gim@postech.edu)**, Creative IT Engineering, POSTECH  
 > **Student ID:** 20160087, **Povis ID:** iknowme
 
-🤔 **Tip:** This page uses KaTeX feature of **Gitlab**. If you are watching this document in **Github**, look [this prerendered README](https://jio-hw.github.io/CSED332_EvenOddSudoku/README.html).  
+🤔 **Tip:** This page uses KaTeX feature of **Gitlab**. If you are watching this document in **Github**, look [this prerendered README](https://wldh-ug.github.io/CSED332_EvenOddSudoku/README.html).  
 
 |                         Sudoku Board                         |
 |:------------------------------------------------------------:|
